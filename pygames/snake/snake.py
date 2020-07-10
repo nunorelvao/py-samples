@@ -8,8 +8,8 @@ import sys
 from os import path
 print(path.abspath(path.dirname(__file__)))
 sys.path.append(path.abspath(path.dirname(__file__))) #APPEND Path for looking for modules
-from assets.gameobjects import snake as snake
-from assets.gameobjects import cube as cube
+from assets.gameobjects import snake as snake 
+from assets.gameobjects import cube as cube 
 #pygame.init()
 #print("USING PYGAME VERSION: {}".format(pygame.ver))
 
