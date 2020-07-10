@@ -5,9 +5,11 @@ import pygame
 import tkinter as tk
 from tkinter import messagebox
 import sys
-sys.path.append("C:/BitBucket/py") #APPEND Path for looking for modules
-from pygames.snake.assets.gameobjects import snake as snake
-from pygames.snake.assets.gameobjects import cube as cube
+from os import path
+print(path.abspath(path.dirname(__file__)))
+sys.path.append(path.abspath(path.dirname(__file__))) #APPEND Path for looking for modules
+from assets.gameobjects import snake as snake
+from assets.gameobjects import cube as cube
 #pygame.init()
 #print("USING PYGAME VERSION: {}".format(pygame.ver))
 
