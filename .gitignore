@@ -1,4 +1,8 @@
 /dist
-.spec
-__pycache__
 /build
+.spec
+*.spec
+__pycache__
+__pycache__.*
+
+
