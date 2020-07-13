@@ -1,6 +1,14 @@
 import turtle
 import winsound
 import asyncio
+from playsound import playsound
+
+import sys
+from os import path
+print(path.abspath(path.dirname(__file__)))
+sys.path.append(path.abspath(path.dirname(__file__))) #APPEND Path for looking for modules
+
+myrootpath = path.abspath(path.dirname(__file__)) + "\\"
 
 class MyPaddle(turtle.Turtle):
      def glow(self,x,y):
@@ -13,6 +21,15 @@ class MyBall(turtle.Turtle):
          self.fillcolor("grey")
      def unglow(self,x,y):
          self.fillcolor("white")
+
+class MyScore():
+    # Scores
+    scoreA = 0
+    scoreB = 0
+    def resetScores(self):
+        scoreA = 0
+        scoreB = 0
+
 
 wn = turtle.Screen()
 wn.title("Pong by @NunoRelvao")
@@ -30,7 +47,7 @@ paddle_a.onrelease(paddle_a.unglow)
 paddle_a.shapesize(stretch_wid=5, stretch_len=1)
 paddle_a.penup()
 paddle_a.goto(-350, 0)
-paddle_a._delay(1000)
+paddle_a._delay(500)
 
 #Paddle B
 paddle_b = MyPaddle()
@@ -52,9 +69,11 @@ ball.onclick(ball.glow)
 ball.onrelease(ball.unglow) 
 ball.penup()
 ball.goto(0, 0)
-ball.dx = 0.07
-ball.dy = 0.07
+ball.dx = 0.10
+ball.dy = 0.10
 
+
+myscore = MyScore()
 
 #Functions to move paddle a
 def paddle_a_up():
@@ -64,7 +83,7 @@ def paddle_a_up():
         y += 20
         paddle_a.sety(y)       
     else:
-        paddle_a.sety(wn.window_height() / 2 - 52)
+        paddle_a.sety(wn.window_height() / 2 - 60)
     
 def paddle_a_down():    
     y = paddle_a.ycor()
@@ -74,7 +93,7 @@ def paddle_a_down():
         paddle_a.sety(y)
         
     else:
-        paddle_a.sety(-(wn.window_height() / 2) + 59)
+        paddle_a.sety(-(wn.window_height() / 2) + 60)
     
 #Functions to move paddle b
 def paddle_b_up():
@@ -84,7 +103,7 @@ def paddle_b_up():
         y += 20
         paddle_b.sety(y)       
     else:
-        paddle_b.sety(wn.window_height() / 2 - 52)
+        paddle_b.sety(wn.window_height() / 2 - 60)
 
 def paddle_b_down():
     y = paddle_b.ycor()
@@ -93,7 +112,7 @@ def paddle_b_down():
         y -= 20
         paddle_b.sety(y) 
     else:
-        paddle_b.sety(-(wn.window_height() / 2) + 59)
+        paddle_b.sety(-(wn.window_height() / 2) + 60)
 
 
 
@@ -120,7 +139,7 @@ def unglow_all():
     paddle_b.unglow(0,0)
 
 def play_sound():
-    winsound.PlaySound("bounce.wav", winsound.SND_ASYNC)
+    playsound(myrootpath + "bounce.wav", False)
 
 async def play_sound_bounce():   
     winsound.Beep(5000, 50)
@@ -129,13 +148,11 @@ async def play_sound_lost():
     winsound.Beep(3000, 100)
     # winsound.Beep(1000, 100)
 
+  
 
 def main():    
     wn.update()
-
-    # Scores
-    scoreA = 0
-    scoreB = 0
+  
 
     #move the ball
     ball.setx(ball.xcor() + ball.dx)
@@ -154,22 +171,23 @@ def main():
     if ball.xcor() > 390:
         ball.goto(0, 0)
         ball.dx *= -1
-        scoreA += 1
+        myscore.scoreA += 1
         pen.clear()
-        pen.write("PlayerA: {}       PlayerB: {}".format(scoreA, scoreB), align="center", font=("Console", 24, "bold"))
+        pen.write("PlayerA: {}       PlayerB: {}".format(myscore.scoreA, myscore.scoreB), align="center", font=("Console", 24, "bold"))
         wn.ontimer(asyncio.run(play_sound_lost()), 30)
 
     if ball.xcor() < -390:
         ball.goto(0, 0)
         ball.dx *= -1
-        scoreB += 1
+        myscore.scoreB += 1
         pen.clear()
-        pen.write("PlayerA: {}       PlayerB: {}".format(scoreA, scoreB), align="center", font=("Console", 24, "bold"))
+        pen.write("PlayerA: {}       PlayerB: {}".format(myscore.scoreA, myscore.scoreB), align="center", font=("Console", 24, "bold"))
         wn.ontimer(asyncio.run(play_sound_lost()), 30)
         
 
     #Paddle a and ball colisions
     if ball.xcor() < -330 and ball.xcor() < -340 and (ball.ycor() < paddle_a.ycor() + 40 and ball.ycor() > paddle_a.ycor() - 40):
+        #wn.ontimer(asyncio.run(play_sound()), 30)
         play_sound()
         paddle_a.glow(0,0)
         ball.glow(0,0)
@@ -179,6 +197,7 @@ def main():
 
     #Paddle b and ball colisions
     if ball.xcor() > 330 and ball.xcor() < 340 and (ball.ycor() < paddle_b.ycor() + 40 and ball.ycor() > paddle_b.ycor() - 40):
+        #wn.ontimer(asyncio.run(play_sound()), 30)
         play_sound()
         paddle_b.glow(0,0)
         ball.glow(0,0)
